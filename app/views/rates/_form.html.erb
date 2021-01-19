@@ -1,0 +1,61 @@
+<%=form_for([@post, @post.rates.build]) do |f| %>
+<div class="field">
+  <div class="control">
+    <div id = “rating-form”>
+      <p>
+        <%= f.label :rating %>
+        <%= f.number_field :star, class: "scoreNow" %>
+      </p>
+    </div>
+  </div>
+</div>
+<%= f.submit %>
+<% end %>
+<h1>Rate this code</h1>
+<ul class="ratingW">
+  <li class="on"><a href="javascript:void(0);"><div class="star"></div></a></li>
+  <li class="on"><a href="javascript:void(0);"><div class="star"></div></a></li>
+  <li class="on"><a href="javascript:void(0);"><div class="star"></div></a></li>
+  <li><a href="javascript:void(0);"><div class="star"></div></a></li>
+  <li><a href="javascript:void(0);"><div class="star"></div></a></li>
+</ul>
+
+<script>
+//https://codepen.io/misunssong/pen/gObmoRb
+function ratingStar(star){
+	star.click(function(){
+		var stars = $('.ratingW').find('li')
+		stars.removeClass('on');
+		var thisIndex = $(this).parents('li').index();
+		for(var i=0; i <= thisIndex; i++){
+			stars.eq(i).addClass('on');
+		}
+    putScoreNow(thisIndex+1);
+    debugger
+    $.ajax({
+        url:'/rates',
+        type:'POST',
+        dataType:'html',
+        data: {star: thisIndex+1},
+        success:function(data){
+            debugger;
+        },
+        error:function(data){
+            debugger;
+        }
+    });
+
+	});
+}
+
+function putScoreNow(i){
+  $('.scoreNow').val(i);
+}
+
+
+$(function(){
+	if($('.ratingW').length > 0){
+			ratingStar($('.ratingW li a'));
+	}
+});
+</script>
